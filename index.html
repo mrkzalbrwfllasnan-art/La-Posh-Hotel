@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>La Posh Hotel | Kigali, Rwanda</title>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif&family=Manrope:wght@300;400&display=swap" rel="stylesheet">
+<style>
+:root{--moss:#1b2622;--ivory:#efeadf;--sage:#9db0a4}
+*{box-sizing:border-box;margin:0}
+html{scroll-behavior:smooth}
+body{font-family:Manrope,system-ui,sans-serif;font-weight:300;color:var(--ivory);background:var(--moss);line-height:1.7}
+
+/* background videos: simple crossfade */
+.bg{position:fixed;inset:0;z-index:-1;background:var(--moss)}
+.bg video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity 1.4s ease}
+.bg video.on{opacity:1}
+.bg::after{content:"";position:absolute;inset:0;background:rgba(27,38,34,.45)}
+
+nav{position:fixed;top:0;left:0;right:0;z-index:5;display:flex;justify-content:space-between;align-items:center;
+padding:calc(1.2rem + env(safe-area-inset-top,0px)) 5vw 1.2rem}
+.logo{font:1.5rem "Instrument Serif",serif;text-decoration:none;color:var(--ivory)}
+.btn{display:inline-block;padding:.75rem 1.8rem;border:1px solid var(--ivory);border-radius:999px;color:var(--ivory);
+background:none;font:400 .95rem Manrope,sans-serif;text-decoration:none;cursor:pointer;transition:background .3s,color .3s}
+.btn:hover,.btn:focus-visible{background:var(--ivory);color:var(--moss);outline:none}
+
+section{min-height:100vh;min-height:100svh;display:flex;flex-direction:column;align-items:center;justify-content:center;
+text-align:center;padding:6rem 6vw}
+h1,h2{font-family:"Instrument Serif",serif;font-weight:400;line-height:1}
+h1{font-size:clamp(4.5rem,16vw,12rem)}
+h2{font-size:clamp(2.6rem,7vw,5rem);margin-bottom:1rem}
+p{max-width:28rem;margin-bottom:2rem;font-size:1.05rem}
+
+/* text fades in when its section appears */
+section>*{opacity:0;transform:translateY(16px);transition:opacity 1s ease,transform 1s ease}
+section.in>*{opacity:1;transform:none}
+section.in>*:nth-child(2){transition-delay:.15s}
+section.in>*:nth-child(3){transition-delay:.3s}
+
+form{display:grid;gap:1rem;width:min(22rem,100%)}
+input,select{width:100%;padding:.85rem 1rem;border-radius:.8rem;border:1px solid rgba(239,234,223,.4);
+background:rgba(27,38,34,.4);color:var(--ivory);font:inherit;color-scheme:dark}
+input:focus-visible,select:focus-visible{outline:2px solid var(--sage);outline-offset:2px}
+select option{color:#111}
+#ok{color:var(--sage);min-height:1.5rem;margin:0}
+footer{background:var(--moss);padding:1.5rem 5vw calc(1.5rem + env(safe-area-inset-bottom,0px));text-align:center;font-size:.85rem;opacity:.8}
+@media(prefers-reduced-motion:reduce){*{transition-duration:.01s!important}html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+<!-- Videos go in the same folder as this file: video1.mp4 ... video4.mp4 -->
+<div class="bg" aria-hidden="true">
+  <video class="on" muted loop playsinline autoplay preload="auto" src="video1.mp4"></video>
+  <video muted loop playsinline preload="auto" src="video2.mp4"></video>
+  <video muted loop playsinline preload="auto" src="video3.mp4"></video>
+  <video muted loop playsinline preload="auto" src="video4.mp4"></video>
+</div>
+
+<nav>
+  <a class="logo" href="#top">La Posh</a>
+  <a class="btn" href="#reserve">Reserve</a>
+</nav>
+
+<main id="top">
+  <section data-v="0" class="in">
+    <h1>La Posh</h1>
+    <p>A quiet hotel in the hills of Kigali, Rwanda.</p>
+    <a class="btn" href="#reserve">Reserve a room</a>
+  </section>
+
+  <section data-v="1">
+    <h2>Rooms</h2>
+    <p>Soft linen, local wood and wide windows that open onto the valley.</p>
+  </section>
+
+  <section data-v="2">
+    <h2>Dining</h2>
+    <p>Rwandan coffee at sunrise and dinner in the garden, made from what is fresh that day.</p>
+  </section>
+
+  <section data-v="3">
+    <h2>Spa and pool</h2>
+    <p>A heated pool, a small spa and a terrace for evening tea.</p>
+  </section>
+
+  <section id="reserve" data-v="3">
+    <h2>Reserve</h2>
+    <form id="f">
+      <input required placeholder="Full name" aria-label="Full name" autocomplete="name">
+      <input required type="email" placeholder="Email" aria-label="Email" autocomplete="email">
+      <input required type="date" aria-label="Arrival date">
+      <select aria-label="Room"><option>Garden room</option><option>Hill view suite</option><option>Family suite</option></select>
+      <button class="btn" type="submit">Send request</button>
+      <p id="ok" role="status"></p>
+    </form>
+  </section>
+</main>
+<footer>La Posh Hotel, Kigali, Rwanda</footer>
+
+<script>
+const vids=[...document.querySelectorAll('.bg video')];
+const io=new IntersectionObserver(es=>es.forEach(e=>{
+  if(e.isIntersecting){
+    e.target.classList.add('in');
+    const i=+e.target.dataset.v;
+    vids.forEach((v,k)=>v.classList.toggle('on',k===i));
+  }
+}),{threshold:.5});
+document.querySelectorAll('section').forEach(s=>io.observe(s));
+vids.forEach(v=>v.play().catch(()=>{}));
+f.addEventListener('submit',e=>{e.preventDefault();ok.textContent='Thank you. We will confirm by email shortly.';f.reset()});
+</script>
+</body>
+</html>
